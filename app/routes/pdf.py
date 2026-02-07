@@ -50,7 +50,7 @@ def generate_signed_download_url(bucket_name: str, object_name: str, expires_min
 				version="v4",
 				method="GET",
 				expiration=timedelta(minutes=expires_minutes),
-				response_disposition=f'attachment; filename="{object_name.split("/")[-1]}"',
+				response_disposition=f'inline; filename="{object_name.split("/")[-1]}"',
 				response_type="application/pdf",
 				credentials=signing_credentials,
 		)
