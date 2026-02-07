@@ -1,0 +1,39 @@
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# Environment variables file (if used for secrets)
+.env
+
+# IDE-specific files
+.idea/  # For PyCharm/IntelliJ
+.vscode/ # For VS Code (optional, some config might be useful to share)
+*.swp # vim temporary files
+.cache
+
+# Logs and output files
+*.log
+*.out
+test.db # Example for a test database file
+
+# Specific project build/dist files
+dist/
+site/
+htmlcov/
+.coverage*
+coverage.xml
+
+# macOS specific files
+.DS_Store
+
+# Docker specific files (if used for build context)
+.dockerignore
+key.json
