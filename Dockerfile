@@ -1,31 +1,26 @@
-# ---- Base image ----
 FROM python:3.12-slim
 
-# Prevent Python from writing pyc files and buffering stdout/stderr
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set working directory
 WORKDIR /code
 
-# System deps (optional but often helpful)
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/code
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
+    build-essential \
+    g++ \
+    pkg-config \
+    libdbus-1-dev \
+    libglib2.0-dev \
  && rm -rf /var/lib/apt/lists/*
 
-# ---- Install Python deps ----
-# Copy requirements first to leverage Docker layer caching
-COPY requirements.txt /code/requirements.txt
-RUN pip install --no-cache-dir -r /code/requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# ---- Copy app code ----
-COPY . /code
+COPY . .
 
-# Cloud Run uses PORT env var; default to 8080 for local
-ENV PORT=8080
+RUN addgroup --system appgroup && adduser --system --group appuser
+USER appuser
 
-# Expose port (mostly for local; Cloud Run ignores EXPOSE)
 EXPOSE 8080
-
-# Start server
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
